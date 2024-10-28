@@ -10,40 +10,41 @@ from config import get_config
 from models import RetinaFace
 from utils.box_utils import decode, decode_landmarks, nms
 
+from utils.timer import Timer
+
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Retinaface Webcam Inference")
+    parser = argparse.ArgumentParser(description='RetinaFace Model WiderFace Dataset Evaluation Script')
 
-    # Model and device options
+    # Model settings
     parser.add_argument(
         '-w', '--weights',
         type=str,
-        default='./weights/Resnet34_Final.pth',
-        help='Path to the trained model weights'
+        default='./weights/mobilenetv1_final.pth',
+        help='Path to the trained state_dict file'
     )
     parser.add_argument(
         '--network',
         type=str,
-        default='resnet34',
+        default='mobilenetv1',
         choices=[
             'mobilenetv1', 'mobilenetv1_0.25', 'mobilenetv1_0.50',
             'mobilenetv2', 'resnet50', 'resnet34', 'resnet18'
         ],
-        help='Backbone network architecture to use'
+        help='Backbone network architecture'
     )
 
-    # Detection settings
+    # Evaluation settings
+    parser.add_argument(
+        '--origin-size',
+        action='store_true',
+        help='Evaluate using the original image size'
+    )
     parser.add_argument(
         '--conf-threshold',
         type=float,
-        default=0.4,
-        help='Confidence threshold for filtering detections'
-    )
-    parser.add_argument(
-        '--pre-nms-topk',
-        type=int,
-        default=5000,
-        help='Maximum number of detections to consider before applying NMS'
+        default=0.02,
+        help='Confidence threshold for detection'
     )
     parser.add_argument(
         '--nms-threshold',
@@ -51,19 +52,19 @@ def parse_arguments():
         default=0.4,
         help='Non-Maximum Suppression (NMS) threshold'
     )
-    parser.add_argument(
-        '--post-nms-topk',
-        type=int,
-        default=750,
-        help='Number of highest scoring detections to keep after NMS'
-    )
 
-    # Output options
+    # File paths
     parser.add_argument(
-        '-v', '--vis-threshold',
-        type=float,
-        default=0.6,
-        help='Visualization threshold for displaying detections'
+        '--save-folder',
+        type=str,
+        default='./widerface_evaluation/widerface_txt/',
+        help='Directory to save the result text files'
+    )
+    parser.add_argument(
+        '--dataset-folder',
+        type=str,
+        default='./data/widerface/val/images/',
+        help='Path to the dataset folder'
     )
 
     return parser.parse_args()
@@ -81,30 +82,25 @@ def inference(model, image):
     return loc, conf, landmarks
 
 
-def draw_detections(original_image, detections, vis_threshold):
-    for det in detections:
-        if det[4] < vis_threshold:
-            continue
+def resize_image(image, target_size=1600, max_size=2150):
+    """Resize the image while maintaining the aspect ratio."""
+    im_shape = image.shape
+    im_size_min = np.min(im_shape[0:2])
+    im_size_max = np.max(im_shape[0:2])
 
-        # Draw bounding box
-        text = "{:.4f}".format(det[4])
-        det = list(map(int, det))
-        cv2.rectangle(original_image, (det[0], det[1]), (det[2], det[3]), (0, 0, 255), 2)
-        cx, cy = det[0], det[1] + 12
-        cv2.putText(original_image, text, (cx, cy), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255))
+    resize = float(target_size) / float(im_size_min)
+    if np.round(resize * im_size_max) > max_size:
+        resize = float(max_size) / float(im_size_max)
 
-        # Draw landmarks
-        cv2.circle(original_image, (det[5], det[6]), 1, (0, 0, 255), 4)
-        cv2.circle(original_image, (det[7], det[8]), 1, (0, 255, 255), 4)
-        cv2.circle(original_image, (det[9], det[10]), 1, (255, 0, 255), 4)
-        cv2.circle(original_image, (det[11], det[12]), 1, (0, 255, 0), 4)
-        cv2.circle(original_image, (det[13], det[14]), 1, (255, 0, 0), 4)
+    return resize
 
 
-def main(params):
+def main(args):
+    # load configuration and device setup
     cfg = get_config(params.network)
     if cfg is None:
         raise KeyError(f"Config file for {params.network} not found!")
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     rgb_mean = (104, 117, 123)
     resize_factor = 1
@@ -114,24 +110,34 @@ def main(params):
     model.to(device)
 
     # loading state_dict
-    state_dict = torch.load(params.weights, map_location="cpu", weights_only=True)
+    state_dict = torch.load(params.weights, map_location=device, weights_only=True)
     model.load_state_dict(state_dict)
     print("Model loaded successfully!")
 
-    # Open webcam
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        print("Error: Could not open webcam.")
-        return
+    model.eval()
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Error: Could not read frame.")
-            break
+    # testing dataset
+    testset_folder = params.dataset_folder
+    testset_list = params.dataset_folder[:-7] + "wider_val.txt"
 
-        # Prepare the frame for inference
-        image = np.float32(frame)
+    with open(testset_list, 'r') as fr:
+        test_dataset = fr.read().split()
+    num_images = len(test_dataset)
+
+    forward_pass = Timer()
+
+    # testing begin
+    for idx, img_name in enumerate(test_dataset):
+        image_path = testset_folder + img_name
+        img_raw = cv2.imread(image_path, cv2.IMREAD_COLOR)
+        image = np.float32(img_raw)
+
+        # Determine resize factor
+        resize_factor = 1 if params.origin_size else resize_image(image)
+
+        if resize_factor != 1:
+            image = cv2.resize(image, None, None, fx=resize_factor, fy=resize_factor, interpolation=cv2.INTER_LINEAR)
+
         img_height, img_width, _ = image.shape
 
         # normalize image
@@ -141,7 +147,9 @@ def main(params):
         image = image.to(device)
 
         # forward pass
-        loc, conf, landmarks = inference(model, image)
+        forward_pass.tic()
+        loc, conf, landmarks = inference(model, image)  # forward pass
+        forward_pass.toc()
 
         # generate anchor boxes
         priorbox = PriorBox(cfg, image_size=(img_height, img_width))
@@ -167,7 +175,7 @@ def main(params):
         scores = scores[inds]
 
         # sort by scores
-        order = scores.argsort()[::-1][:params.pre_nms_topk]
+        order = scores.argsort()[::-1]
         boxes, landmarks, scores = boxes[order], landmarks[order], scores[order]
 
         # apply NMS
@@ -177,26 +185,20 @@ def main(params):
         detections = detections[keep]
         landmarks = landmarks[keep]
 
-        # keep top-k detections and landmarks
-        detections = detections[:params.post_nms_topk]
-        landmarks = landmarks[:params.post_nms_topk]
+        # Save results
+        save_name = params.save_folder + img_name[:-4] + ".txt"
+        dirname = os.path.dirname(save_name)
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+        with open(save_name, "w") as fd:
+            fd.write(f"{os.path.basename(save_name)[:-4]}\n")
+            fd.write(f"{len(detections)}\n")
+            for box in detections:
+                x, y, w, h = map(int, box[:4])
+                confidence = box[4]
+                fd.write(f"{x} {y} {w} {h} {confidence:.6f}\n")
 
-        # concatenate detections and landmarks
-        detections = np.concatenate((detections, landmarks), axis=1)
-
-        # draw detections on the frame
-        draw_detections(frame, detections, params.vis_threshold)
-
-        # Display the resulting frame
-        cv2.imshow('Webcam Inference', frame)
-
-        # Press 'q' to quit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    # Release the webcam and close windows
-    cap.release()
-    cv2.destroyAllWindows()
+        print('im_detect: {:d}/{:d} forward_pass_time: {:.4f}s'.format(idx + 1, num_images, forward_pass.average_time))
 
 
 if __name__ == '__main__':

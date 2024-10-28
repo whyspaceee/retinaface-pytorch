@@ -91,13 +91,19 @@ python train.py --network mobilenetv1  # Replace 'mobilenetv1' with your choice 
 - `resnet34`
 - `resnet50`
 
-## 📊 Inference
+## 🧪 WiderFace Evaluation
 
-Inference the model using:
+1. Get and install widerface evaluation from https://github.com/yakhyo/widerface_evaluation
 
-```bash
-python detect.py --network mobilenetv1 --weights path/to/model
-```
+   `git clone https://github.com/yakhyo/widerface_evaluation` inside `retinaface-pytorch` folder.
+
+   Run this command to install `python3 setup.py build_ext --inplace`
+
+   Run this command to run evaluation `python3 evaluation.py -p <your prediction dir> -g <groud truth dir>`
+
+2. ```bash
+   python evaluate_widerface.py --network mobilenetv1 --weights weights/mobilenetv1.pth
+   ```
 
 ## 📈 Results
 
@@ -114,6 +120,14 @@ python detect.py --network mobilenetv1 --weights path/to/model
 | ResNet18 (original image scale)        | True     | 95.68% | 94.43% | 67.90% |             |            |            |
 | ResNet34                               | True     |        |        |        |             |            |            |
 | ResNet50                               | True     |        |        |        |             |            |            |
+
+## 📊 Inference
+
+Inference the model using:
+
+```bash
+python detect.py --network mobilenetv1 --weights path/to/model
+```
 
 ## 📜 License
 
