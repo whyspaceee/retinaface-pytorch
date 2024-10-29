@@ -6,6 +6,9 @@
 
 This is a face detection model for high-precision facial localization based on [RetinaFace: Single-stage Dense Face Localisation in the Wild](https://arxiv.org/abs/1905.00641). This model accurately detects facial landmarks and bounding boxes for faces in images. This repository provides custom training & inference code, and several new backbone models have been integrated for improved performance and flexibility.
 
+> [!NOTE]  
+> We've updated the codebase with new trained models and a refactored structure, enhancing functionality and maintainability. These improvements include support for MobileNetV1, MobileNetV2, and various ResNet versions (18, 34, 50), offering a cleaner and more reproducible experience.
+
 <div align="center">
 <img src="assets/res18_test.jpg">
 </div>
@@ -85,7 +88,8 @@ This RetinaFace implementation supports the following feature extractor backbone
          └── wider_val.txt
    ```
 
-   wider_val.txt only includes val file names but not label information.
+   > [!NOTE]  
+   > `wider_val.txt` only includes val file names but not label information.
 
    There is also an organized dataset (as shown above): Link from [Google Drive](https://drive.google.com/open?id=11UGV3nbVv1x9IC--_tK3Uxf7hA6rlbsS) or [Baidu Cloud](https://pan.baidu.com/s/1jIp9t30oYivrAvrgUgIoLQ) _(password: ruck)_. Thanks to [biubug6](https://github.com/biubug6) for the organized dataset.
 
@@ -170,7 +174,8 @@ cd widerface_evaluation
 python evaluation.py -p widerface_txt -g ground_truth
 ```
 
-Ensure `ground_truth` is the path to the WiderFace ground truth directory.
+> [!NOTE]  
+> Ensure `ground_truth` is the path to the WiderFace ground truth directory.
 
 This will begin the evaluation process of your model on the WiderFace dataset.
 
