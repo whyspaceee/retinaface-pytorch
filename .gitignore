@@ -8,7 +8,7 @@ weights/*.pth
 weights/*.pt
 weights/*.ckpt
 
-widerface_evaluate
+widerface_evaluation
 
 
 # Byte-compiled / optimized / DLL files

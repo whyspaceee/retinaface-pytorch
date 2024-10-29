@@ -12,13 +12,13 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='ONNX Export')
 
     parser.add_argument(
-        '--weights',
+        '-w', '--weights',
         default='./weights/last.pth',
         type=str,
         help='Trained state_dict file path to open'
     )
     parser.add_argument(
-        '--network',
+        '-n', '--network',
         type=str,
         default='mobilenetv1',
         choices=[
@@ -67,7 +67,8 @@ def onnx_export(params):
     # set to evaluation mode
     model.eval()
 
-    onnx_model = f'{args.network}.onnx'
+    fname = os.path.splitext(os.path.basename(args.weights))[0]
+    onnx_model = f'{fname}.onnx'
     print("==> Exporting model to ONNX format at '{}'".format(onnx_model))
 
     # create a dummy input with the same size which is used during training

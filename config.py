@@ -118,7 +118,7 @@ cfg_re50 = {
     'variance': [0.1, 0.2],
     'clip': False,
     'loc_weight': 2.0,
-    'batch_size': 16,
+    'batch_size': 8,
     'epochs': 100,
     'milestones': [70, 90],
     'image_size': 640,
