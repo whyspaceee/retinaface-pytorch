@@ -91,19 +91,44 @@ python train.py --network mobilenetv1  # Replace 'mobilenetv1' with your choice 
 - `resnet34`
 - `resnet50`
 
-## 🧪 WiderFace Evaluation
+## 🧪 Evaluating RetinaFace on WiderFace Dataset
 
-1. Get and install widerface evaluation from https://github.com/yakhyo/widerface_evaluation
+### 1. Get and Install WiderFace Evaluation Tool
 
-   `git clone https://github.com/yakhyo/widerface_evaluation` inside `retinaface-pytorch` folder.
-
-   Run this command to install `python3 setup.py build_ext --inplace`
-
-   Run this command to run evaluation `python3 evaluation.py -p <your prediction dir> -g <groud truth dir>`
-
-2. ```bash
-   python evaluate_widerface.py --network mobilenetv1 --weights weights/mobilenetv1.pth
+1. Clone the WiderFace evaluation repository inside the `retinaface-pytorch` folder:
+   ```bash
+   git clone https://github.com/yakhyo/widerface_evaluation
    ```
+2. Navigate to the `widerface_evaluation` folder and build the required extension:
+   ```bash
+   cd widerface_evaluation
+   python3 setup.py build_ext --inplace
+   ```
+3. Return to the `retinaface-pytorch` folder after installation is complete:
+   ```bash
+   cd ..
+   ```
+
+### 2. Generate Predictions
+
+Run the following command to evaluate your RetinaFace model with WiderFace, specifying the model architecture (`mobilenetv1` in this example) and the path to the trained weights. Predictions will be stored in `widerface_txt` inside the `widerface_evaluation` folder.
+
+```bash
+python evaluate_widerface.py --network mobilenetv1 --weights weights/mobilenetv1.pth
+```
+
+### 3. Run the Final Evaluation
+
+After generating predictions, navigate to the widerface_evaluation folder and run the following command to compare predictions with the ground truth annotations:
+
+```bash
+cd widerface_evaluation
+python evaluation.py -p widerface_txt -g ground_truth
+```
+
+Ensure `ground_truth` is the path to the WiderFace ground truth directory.
+
+This will begin the evaluation process of your model on the WiderFace dataset.
 
 ## 📈 Results
 
@@ -126,7 +151,7 @@ python train.py --network mobilenetv1  # Replace 'mobilenetv1' with your choice 
 Inference the model using:
 
 ```bash
-python detect.py --network mobilenetv1 --weights path/to/model
+python detect.py --network mobilenetv1 --weights retinaface_mv1.pth
 ```
 
 ## 📜 License

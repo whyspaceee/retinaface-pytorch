@@ -95,7 +95,7 @@ def resize_image(image, target_size=1600, max_size=2150):
     return resize
 
 
-def main(args):
+def main(params):
     # load configuration and device setup
     cfg = get_config(params.network)
     if cfg is None:
