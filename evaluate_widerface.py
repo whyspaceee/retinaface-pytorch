@@ -191,12 +191,19 @@ def main(params):
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
         with open(save_name, "w") as fd:
-            fd.write(f"{os.path.basename(save_name)[:-4]}\n")
-            fd.write(f"{len(detections)}\n")
+            file_name = os.path.basename(save_name)[:-4] + "\n"
+            bboxs_num = str(len(detections)) + "\n"
+            fd.write(file_name)
+            fd.write(bboxs_num)
             for box in detections:
-                x, y, w, h = map(int, box[:4])
-                confidence = box[4]
-                fd.write(f"{x} {y} {w} {h} {confidence:.6f}\n")
+                x = int(box[0])
+                y = int(box[1])
+                w = int(box[2]) - int(box[0])
+                h = int(box[3]) - int(box[1])
+                confidence = str(box[4])
+                fd.write(f"{x} {y} {w} {h} {confidence}\n")
+                # line = str(x) + " " + str(y) + " " + str(w) + " " + str(h) + " " + confidence + " \n"
+                # fd.write(line)
 
         print('im_detect: {:d}/{:d} forward_pass_time: {:.4f}s'.format(idx + 1, num_images, forward_pass.average_time))
 

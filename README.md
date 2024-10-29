@@ -23,10 +23,13 @@ In this implementation, we use several lightweight and powerful backbone archite
 | MobileNetV1_025 (original image size) | False    | 91.99% | 89.78% | 61.22% |             |            |            |
 | MobileNetV1_050 (MXNet image scale)   | False    | 91.88% | 90.56% | 85.53% |             |            |            |
 | MobileNetV1_050 (original image size) | False    | 94.00% | 92.57% | 65.51% |             |            |            |
-| MobileNetV2                           | True     |        |        |        |             |            |            |
+| MobileNetV2 (MXNet image scale)       | True     | 92.39% | 91.48% | 86.86% |             |            |            |
+| MobileNetV2 (original image size)     | True     | 95.23% | 94.03% | 67.17% |             |            |            |
 | ResNet18 (MXNet image scale)          | True     | 93.00% | 92.33% | 87.99% |             |            |            |
 | ResNet18 (original image size)        | True     | 95.68% | 94.43% | 67.90% |             |            |            |
-| ResNet34                              | True     |        |        |        |             |            |            |
+| ResNet34 (MXNet image scale)          | True     | 94.09% | 93.46% | 89.37% |             |            |            |
+| ResNet34 (original image size)        | True     | 96.94% | 94.93% | 68.40% |             |            |            |
+| ResNet50                              | True     |        |        |        |             |            |            |
 | ResNet50                              | True     |        |        |        |             |            |            |
 
 ## ✨ Features
