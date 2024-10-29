@@ -12,6 +12,22 @@ This is a face detection model for high-precision facial localization based on [
 
 In this implementation, we use several lightweight and powerful backbone architectures to provide flexibility between performance and accuracy.
 
+## 📈 Results
+
+| Retinaface Feature Extractors         | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) | Infer (ms) |
+| ------------------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- | ---------- |
+| MobileNetV1 (MXNet image scale)       | False    | 92.66% | 91.71% | 87.11% |             |            |            |
+| MobileNetV1 (original image size)     | False    | 95.35% | 93.82% | 67.27% |             |            |            |
+| MobileNetV1_025 (MXNet image scale)   | False    | 90.09% | 88.32% | 81.98% |             |            |            |
+| MobileNetV1_025 (original image size) | False    | 91.99% | 89.78% | 61.22% |             |            |            |
+| MobileNetV1_050 (MXNet image scale)   | False    | 91.88% | 90.56% | 85.53% |             |            |            |
+| MobileNetV1_050 (original image size) | False    | 94.00% | 92.57% | 65.51% |             |            |            |
+| MobileNetV2                           | True     |        |        |        |             |            |            |
+| ResNet18 (MXNet image scale)          | True     | 93.00% | 92.33% | 87.99% |             |            |            |
+| ResNet18 (original image size)        | True     | 95.68% | 94.43% | 67.90% |             |            |            |
+| ResNet34                              | True     |        |        |        |             |            |            |
+| ResNet50                              | True     |        |        |        |             |            |            |
+
 ## ✨ Features
 
 - ✅ **Cleaner & Reproducible Code**: Refactored for simplicity and consistency, making it easier to use and maintain.
@@ -91,6 +107,34 @@ python train.py --network mobilenetv1  # Replace 'mobilenetv1' with your choice 
 - `resnet34`
 - `resnet50`
 
+### ⬇️ Get Pretrained Models
+
+#### MobileNet-based models:
+
+| Model Name      | PyTorch Weights                                                                                                          | ONNX Weights Filename                                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| MobileNetV1_025 | [retinaface_mv1_0.25.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv1_0.25.pth) | [retinaface_mv1_0.25.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv1_0.25.onnx) |
+| MobileNetV1_050 | [retinaface_mv1_0.50.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv1_0.50.pth) | [retinaface_mv1_0.50.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv1_0.50.onnx) |
+| MobileNetV1     | [retinaface_mv1.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv1.pth)           | [retinaface_mv1.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv1.onnx)           |
+| MobileNetV2     | [retinaface_mv2.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv2.pth)           | [retinaface_mv2.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_mv2.onnx)           |
+
+#### ResNet-based models:
+
+| Model Name | PyTorch Weights                                                                                                | ONNX Weights Filename                                                                                            |
+| ---------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| ResNet18   | [retinaface_r18.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.pth) | [retinaface_r18.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.onnx) |
+| ResNet34   | [retinaface_r34.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.pth) | [retinaface_r34.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.onnx) |
+| ResNet50   | [retinaface_r50.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r50.pth) | [retinaface_r50.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r50.onnx) |
+|            |
+
+## 📊 Inference
+
+Inference the model using:
+
+```bash
+python detect.py --network mobilenetv1 --weights retinaface_mv1.pth
+```
+
 ## 🧪 Evaluating RetinaFace on WiderFace Dataset
 
 ### 1. Get and Install WiderFace Evaluation Tool
@@ -129,30 +173,6 @@ python evaluation.py -p widerface_txt -g ground_truth
 Ensure `ground_truth` is the path to the WiderFace ground truth directory.
 
 This will begin the evaluation process of your model on the WiderFace dataset.
-
-## 📈 Results
-
-| Retinaface Feature Extractors          | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) | Infer (ms) |
-| -------------------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- | ---------- |
-| MobileNetV1 (MXNet image scale)        | False    | 92.66% | 91.71% | 87.11% |             |            |            |
-| MobileNetV1 (original image scale)     | False    | 95.35% | 93.82% | 67.27% |             |            |            |
-| MobileNetV1_025 (MXNet image scale)    | False    | 90.09% | 88.32% | 81.98% |             |            |            |
-| MobileNetV1_025 (original image scale) | False    | 91.99% | 89.78% | 61.22% |             |            |            |
-| MobileNetV1_050 (MXNet image scale)    | False    | 91.88% | 90.56% | 85.53% |             |            |            |
-| MobileNetV1_050 (original image scale) | False    | 94.00% | 92.57% | 65.51% |             |            |            |
-| MobileNetV2                            | True     |        |        |        |             |            |            |
-| ResNet18 (MXNet image scale)           | True     | 93.00% | 92.33% | 87.99% |             |            |            |
-| ResNet18 (original image scale)        | True     | 95.68% | 94.43% | 67.90% |             |            |            |
-| ResNet34                               | True     |        |        |        |             |            |            |
-| ResNet50                               | True     |        |        |        |             |            |            |
-
-## 📊 Inference
-
-Inference the model using:
-
-```bash
-python detect.py --network mobilenetv1 --weights retinaface_mv1.pth
-```
 
 ## 📜 License
 
