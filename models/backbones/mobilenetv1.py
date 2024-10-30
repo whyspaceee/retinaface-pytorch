@@ -2,9 +2,12 @@ import torch
 from torch import nn, Tensor
 from typing import List, Optional, Callable
 
-from models.common import _make_divisible, Conv2dNormActivation, DepthWiseSeparableConv2d, IntermediateLayerGetterByIndex
+from models.common import _make_divisible, Conv2dNormActivation, DepthWiseSeparableConv2d
+
+import torchvision.models._utils as _utils
 
 __all__ = ["mobilenet_v1_025", "mobilenet_v1_050", "mobilenet_v1"]
+
 
 class MobileNetV1(nn.Module):
     def __init__(self, width_mult: float = 0.25, num_classes: int = 1000):
@@ -13,21 +16,23 @@ class MobileNetV1(nn.Module):
         filters = [32, 64, 128, 256, 512, 1024]
         filters = [_make_divisible(filter * width_mult) for filter in filters]
 
-        self.features: List[nn.Module] = nn.Sequential(
-            Conv2dNormActivation(in_channels=3,  out_channels=filters[0], kernel_size=3, stride=2),
+        self.stage1: List[nn.Module] = nn.Sequential(
+            Conv2dNormActivation(in_channels=3,  out_channels=filters[0], kernel_size=3, stride=2, negative_slope=0.1),
             DepthWiseSeparableConv2d(filters[0],  out_channels=filters[1], stride=1),
             DepthWiseSeparableConv2d(filters[1], out_channels=filters[2], stride=2),
             DepthWiseSeparableConv2d(filters[2], out_channels=filters[2], stride=1),
             DepthWiseSeparableConv2d(filters[2], out_channels=filters[3], stride=2),
             DepthWiseSeparableConv2d(filters[3], out_channels=filters[3], stride=1),  # (5) P / 8 -> 640 / 8 = 80
-
+        )
+        self.stage2: List[nn.Module] = nn.Sequential(
             DepthWiseSeparableConv2d(filters[3], out_channels=filters[4], stride=2),
             DepthWiseSeparableConv2d(filters[4], out_channels=filters[4], stride=1),
             DepthWiseSeparableConv2d(filters[4], out_channels=filters[4], stride=1),
             DepthWiseSeparableConv2d(filters[4], out_channels=filters[4], stride=1),
             DepthWiseSeparableConv2d(filters[4], out_channels=filters[4], stride=1),
             DepthWiseSeparableConv2d(filters[4], out_channels=filters[4], stride=1),  # (11) P / 16 -> 640 / 16 = 40
-
+        )
+        self.stage3: List[nn.Module] = nn.Sequential(
             DepthWiseSeparableConv2d(filters[4], out_channels=filters[5], stride=2),
             DepthWiseSeparableConv2d(filters[5], out_channels=filters[5], stride=1),  # (13) P / 32 -> 640 / 32 = 20
         )
@@ -49,7 +54,9 @@ class MobileNetV1(nn.Module):
                 nn.init.zeros_(m.bias)
 
     def forward(self, x: Tensor) -> Tensor:
-        x = self.features(x)
+        x = self.stage1(x)
+        x = self.stage2(x)
+        x = self.stage3(x)
 
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
@@ -58,8 +65,12 @@ class MobileNetV1(nn.Module):
         return x
 
 
-def mobilenet_v1_025(num_classes: int = 1000):
-    return MobileNetV1(width_mult=0.25, num_classes=num_classes)
+def mobilenet_v1_025(pretrained: bool = True, num_classes: int = 1000):
+    model = MobileNetV1(width_mult=0.25, num_classes=num_classes)
+    if pretrained:
+        state_dict = torch.load("weights/mobilenetv1_0.25.pretrained", weights_only=True)
+        model.load_state_dict(state_dict)
+    return model
 
 
 def mobilenet_v1_050(num_classes: int = 1000):
@@ -74,7 +85,7 @@ if __name__ == "__main__":
     model = mobilenet_v1_025()
 
     x = torch.randn(1, 3, 640, 640)
-    t = IntermediateLayerGetterByIndex(model, [5, 11, 13])
+    t = _utils.IntermediateLayerGetter(model, {'stage1': 1, 'stage2': 2, 'stage3': 3})
 
     a, b, c = list(t(x).values())
 

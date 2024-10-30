@@ -7,6 +7,7 @@ data/
 weights/*.pth
 weights/*.pt
 weights/*.ckpt
+*.onnx
 
 widerface_evaluation
 

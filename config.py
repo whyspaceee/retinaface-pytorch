@@ -22,8 +22,8 @@ cfg_mnet_025 = {
     'epochs': 250,
     'milestones': [190, 220],
     'image_size': 640,
-    'pretrain': False,
-    'return_layers': [5, 11, 13],
+    'pretrain': True,
+    'return_layers': {'stage1': 1, 'stage2': 2, 'stage3': 3},
     'in_channel': 32,
     'out_channel': 64
 }
@@ -40,7 +40,7 @@ cfg_mnet_050 = {
     'milestones': [190, 220],
     'image_size': 640,
     'pretrain': False,
-    'return_layers': [5, 11, 13],
+    'return_layers': {'stage1': 1, 'stage2': 2, 'stage3': 3},
     'in_channel': 64,
     'out_channel': 128
 }
@@ -56,7 +56,7 @@ cfg_mnet = {
     'milestones': [190, 220],
     'image_size': 640,
     'pretrain': False,
-    'return_layers': [5, 11, 13],
+    'return_layers': {'stage1': 1, 'stage2': 2, 'stage3': 3},
     'in_channel': 128,
     'out_channel': 128
 }
