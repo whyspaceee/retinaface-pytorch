@@ -101,6 +101,29 @@ def draw_detections(original_image, detections, vis_threshold):
         cv2.circle(original_image, (det[13], det[14]), 1, (255, 0, 0), 4)
 
 
+def resize_image(frame, target_shape=(640, 640)):
+    width, height = target_shape
+
+    # Aspect-ratio preserving resize
+    im_ratio = float(frame.shape[0]) / frame.shape[1]
+    model_ratio = height / width
+    if im_ratio > model_ratio:
+        new_height = height
+        new_width = int(new_height / im_ratio)
+    else:
+        new_width = width
+        new_height = int(new_width * im_ratio)
+
+    resize_factor = float(new_height) / frame.shape[0]
+    resized_frame = cv2.resize(frame, (new_width, new_height))
+
+    # Create blank image and place resized image on it
+    image = np.zeros((height, width, 3), dtype=np.uint8)
+    image[:new_height, :new_width, :] = resized_frame
+
+    return image, resize_factor
+
+
 def main(params):
     cfg = get_config(params.network)
     if cfg is None:
@@ -130,15 +153,14 @@ def main(params):
             print("Error: Could not read frame.")
             break
 
-        # Prepare the frame for inference
-        image = np.float32(frame)
-        img_height, img_width, _ = image.shape
+        image, resize_factor = resize_image(frame, target_shape=(640, 640))
 
-        # normalize image
+        # Prepare image for inference
+        image = np.float32(image)
+        img_height, img_width, _ = image.shape
         image -= rgb_mean
         image = image.transpose(2, 0, 1)  # HWC -> CHW
-        image = torch.from_numpy(image).unsqueeze(0)  # 1CHW
-        image = image.to(device)
+        image = torch.from_numpy(image).unsqueeze(0).to(device)
 
         # forward pass
         loc, conf, landmarks = inference(model, image)
