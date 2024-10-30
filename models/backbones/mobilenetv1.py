@@ -68,7 +68,7 @@ class MobileNetV1(nn.Module):
 def mobilenet_v1_025(pretrained: bool = True, num_classes: int = 1000):
     model = MobileNetV1(width_mult=0.25, num_classes=num_classes)
     if pretrained:
-        state_dict = torch.load("weights/mobilenetv1_0.25.pretrained", weights_only=True)
+        state_dict = torch.load("weights/mobilenetv1_025.pretrained", weights_only=True)
         model.load_state_dict(state_dict)
     return model
 
