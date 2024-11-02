@@ -11,7 +11,6 @@ from config import get_config
 from models import RetinaFace
 from utils.box_utils import decode, decode_landmarks, nms
 
-
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Inference Arguments for RetinaFace")
 
@@ -105,10 +104,11 @@ def draw_detections(original_image, detections, vis_threshold):
         detections (ndarray): Array of detected bounding boxes and landmarks.
         vis_threshold (float): The confidence threshold for displaying detections.
     """
+    cnt = 0
     for det in detections:
         if det[4] < vis_threshold:
             continue
-
+        cnt += 1
         # Draw bounding box
         text = "{:.4f}".format(det[4])
         det = list(map(int, det))
@@ -122,6 +122,7 @@ def draw_detections(original_image, detections, vis_threshold):
         cv2.circle(original_image, (det[9], det[10]), 1, (255, 0, 255), 4)
         cv2.circle(original_image, (det[11], det[12]), 1, (0, 255, 0), 4)
         cv2.circle(original_image, (det[13], det[14]), 1, (255, 0, 0), 4)
+    print("cnt", cnt)
 
 
 def main(params):
@@ -136,6 +137,7 @@ def main(params):
     # model initialization
     model = RetinaFace(cfg=cfg)
     model.to(device)
+    model.eval()
 
     # loading state_dict
     state_dict = torch.load(params.weights, map_location=device, weights_only=True)

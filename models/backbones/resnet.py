@@ -257,7 +257,7 @@ def _resnet(block: Type[BasicBlock], layers: List[int], weights: Optional[ResNet
 
 def resnet18(*, pretrained: bool = True, progress: bool = True, **kwargs: Any) -> ResNet:
     if pretrained:
-        weights = ResNet18_Weights.DEFAULT
+        weights = ResNet18_Weights.IMAGENET1K_V1 
     else:
         weights = None
     return _resnet(BasicBlock, [2, 2, 2, 2], weights, progress, **kwargs)
@@ -265,7 +265,7 @@ def resnet18(*, pretrained: bool = True, progress: bool = True, **kwargs: Any) -
 
 def resnet34(*, pretrained: bool = True, progress: bool = True, **kwargs: Any) -> ResNet:
     if pretrained:
-        weights = ResNet34_Weights.DEFAULT
+        weights = ResNet34_Weights.IMAGENET1K_V1 
     else:
         weights = None
     return _resnet(BasicBlock, [3, 4, 6, 3], weights, progress, **kwargs)
@@ -273,7 +273,7 @@ def resnet34(*, pretrained: bool = True, progress: bool = True, **kwargs: Any) -
 
 def resnet50(*, pretrained: bool = True, progress: bool = True, **kwargs: Any) -> ResNet:
     if pretrained:
-        weights = ResNet50_Weights.DEFAULT
+        weights = ResNet50_Weights.IMAGENET1K_V2 
     else:
         weights = None
 

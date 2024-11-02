@@ -79,7 +79,7 @@ cfg_mnet_v2 = {
 }
 
 cfg_re18 = {
-    'name': 'Resnet18',
+    'name': 'resnet18',
     'min_sizes': [[16, 32], [64, 128], [256, 512]],
     'steps': [8, 16, 32],
     'variance': [0.1, 0.2],
@@ -95,7 +95,7 @@ cfg_re18 = {
     'out_channel': 128
 }
 cfg_re34 = {
-    'name': 'Resnet34',
+    'name': 'resnet34',
     'min_sizes': [[16, 32], [64, 128], [256, 512]],
     'steps': [8, 16, 32],
     'variance': [0.1, 0.2],
@@ -112,7 +112,7 @@ cfg_re34 = {
 }
 
 cfg_re50 = {
-    'name': 'Resnet50',
+    'name': 'resnet50',
     'min_sizes': [[16, 32], [64, 128], [256, 512]],
     'steps': [8, 16, 32],
     'variance': [0.1, 0.2],

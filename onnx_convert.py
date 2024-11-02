@@ -82,7 +82,11 @@ def onnx_export(params):
         export_params=True,
         verbose=False,
         input_names=['input'],
-        output_names=['output']
+        output_names=['output'],
+        dynamic_axes={
+            'input': {0: 'batch_size', 2: 'height', 3: 'width'},
+            'output': {0: 'batch_size'}
+        }
     )
 
 

@@ -14,7 +14,7 @@ from models.backbones import (
     resnet34,
     resnet50
 )
-
+from torchvision import models
 from models.common import SSH, FPN, IntermediateLayerGetterByIndex
 
 
@@ -51,9 +51,9 @@ def build_backbone(name, pretrained=False):
         'mobilenet0.50': mobilenet_v1_050,
         'mobilenet_v1': mobilenet_v1,
         'mobilenet_v2': lambda: mobilenet_v2(pretrained=pretrained),
-        'Resnet50': lambda: resnet50(pretrained=pretrained),
-        'Resnet34': lambda: resnet34(pretrained=pretrained),
-        'Resnet18': lambda: resnet18(pretrained=pretrained)
+        'resnet50': lambda: resnet50(pretrained=pretrained),
+        'resnet34': lambda: resnet34(pretrained=pretrained),
+        'resnet18': lambda: resnet18(pretrained=pretrained)
     }
 
     if name not in backbone_map:

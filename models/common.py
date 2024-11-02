@@ -54,7 +54,7 @@ class Conv2dNormActivation(nn.Sequential):
 
         if activation_layer is not None:
             params = {} if inplace is None else {"inplace": inplace}
-            if issubclass(activation_layer, torch.nn.LeakyReLU) and negative_slope is not None:
+            if negative_slope is not None:
                 params["negative_slope"] = negative_slope
             layers.append(activation_layer(**params))
         super().__init__(*layers)
