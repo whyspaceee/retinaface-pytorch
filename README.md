@@ -14,24 +14,31 @@ This is a face detection model for high-precision facial localization based on [
 
 In this implementation, we use several lightweight and powerful backbone architectures to provide flexibility between performance and accuracy.
 
-## 📈 Results
+## 📈 Results on WiderFace Eval
 
-| Retinaface Feature Extractors         | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) | Infer (ms) |
-| ------------------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- | ---------- |
-| MobileNetV1 (MXNet image scale)       | False    | 92.66% | 91.71% | 87.11% |             |            |            |
-| MobileNetV1 (original image size)     | False    | 95.35% | 93.82% | 67.27% |             |            |            |
-| MobileNetV1_025 (MXNet image scale)   | False    | 90.09% | 88.32% | 81.98% |             |            |            |
-| MobileNetV1_025 (original image size) | False    | 91.99% | 89.78% | 61.22% |             |            |            |
-| MobileNetV1_050 (MXNet image scale)   | False    | 91.88% | 90.56% | 85.53% |             |            |            |
-| MobileNetV1_050 (original image size) | False    | 94.00% | 92.57% | 65.51% |             |            |            |
-| MobileNetV2 (MXNet image scale)       | True     | 92.39% | 91.48% | 86.86% |             |            |            |
-| MobileNetV2 (original image size)     | True     | 95.23% | 94.03% | 67.17% |             |            |            |
-| ResNet18 (MXNet image scale)          | True     | 93.00% | 92.33% | 87.99% |             |            |            |
-| ResNet18 (original image size)        | True     | 95.68% | 94.43% | 67.90% |             |            |            |
-| ResNet34 (MXNet image scale)          | True     | 94.09% | 93.46% | 89.37% |             |            |            |
-| ResNet34 (original image size)        | True     | 96.94% | 94.93% | 68.40% |             |            |            |
-| ResNet50                              | True     |        |        |        |             |            |            |
-| ResNet50                              | True     |        |        |        |             |            |            |
+### Results of RetinaFace (MXNet-based Image Size)
+
+| Models                        | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) | Infer (ms) |
+| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- | ---------- |
+| MobileNetV1 (width mult=0.25) | False    | 88.48% | 87.02% | 80.61% |             |            |            |
+| MobileNetV1 (width mult=0.50) | False    | 89.42% | 87.97% | 82.40% |             |            |            |
+| MobileNetV1                   | False    |        |        |        |             |            |            |
+| MobileNetV2                   | True     |        |        |        |             |            |            |
+| ResNet18                      | True     |        |        |        |             |            |            |
+| ResNet34                      | True     |        |        |        |             |            |            |
+| ResNet50                      | True     |        |        |        |             |            |            |
+
+### Results of RetinaFace, based on Original Image Size
+
+| Models                        | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) | Infer (ms) |
+| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- | ---------- |
+| MobileNetV1 (width mult=0.25) | False    | 90.70% | 88.12% | 73.82% |             |            |            |
+| MobileNetV1 (width mult=0.50) | False    | 91.56% | 89.46% | 76.56% |             |            |            |
+| MobileNetV1                   | False    |        |        |        |             |            |            |
+| MobileNetV2                   | True     |        |        |        |             |            |            |
+| ResNet18                      | True     |        |        |        |             |            |            |
+| ResNet34                      | True     |        |        |        |             |            |            |
+| ResNet50                      | True     |        |        |        |             |            |            |
 
 ## ✨ Features
 
@@ -48,8 +55,8 @@ In this implementation, we use several lightweight and powerful backbone archite
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your_username/retinaface-multiple-backbones.git
-   cd retinaface-multiple-backbones
+   git clone https://github.com/yakhyo/retinaface-pytorch.git
+   cd retinaface-pytorch
    ```
 
 2. **Install dependencies**:

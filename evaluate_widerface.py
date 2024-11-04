@@ -38,7 +38,6 @@ def parse_arguments():
     parser.add_argument(
         '--origin-size',
         action='store_true',
-        default=True,
         help='Evaluate using the original image size'
     )
     parser.add_argument(

@@ -1,9 +1,9 @@
 # Project files
 results/
 # data/
-data/*.jpg
+data/FDDB
+data/widerface
 eval/
-data/
 weights/*.pth
 weights/*.pt
 weights/*.ckpt
