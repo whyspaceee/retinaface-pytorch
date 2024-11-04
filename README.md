@@ -18,27 +18,27 @@ In this implementation, we use several lightweight and powerful backbone archite
 
 ### Results of RetinaFace (MXNet-based Image Size)
 
-| Models                        | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) | Infer (ms) |
-| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- | ---------- |
-| MobileNetV1 (width mult=0.25) | False    | 88.48% | 87.02% | 80.61% |             |            |            |
-| MobileNetV1 (width mult=0.50) | False    | 89.42% | 87.97% | 82.40% |             |            |            |
-| MobileNetV1                   | False    |        |        |        |             |            |            |
-| MobileNetV2                   | True     |        |        |        |             |            |            |
-| ResNet18                      | True     |        |        |        |             |            |            |
-| ResNet34                      | True     |        |        |        |             |            |            |
-| ResNet50                      | True     |        |        |        |             |            |            |
+| RetinaFace Backbones          | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) |
+| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- |
+| MobileNetV1 (width mult=0.25) | False    | 88.48% | 87.02% | 80.61% | 0.42        |            |
+| MobileNetV1 (width mult=0.50) | False    | 89.42% | 87.97% | 82.40% | 1.65        |            |
+| MobileNetV1                   | False    | 90.59% | 89.14% | 84.13% | 4.16        |            |
+| MobileNetV2                   | True     |        |        |        | 3.12        |            |
+| ResNet18                      | True     |        |        |        | 12.01       |            |
+| ResNet34                      | True     |        |        |        | 22.12       |            |
+| ResNet50                      | True     |        |        |        | 27.29       |            |
 
 ### Results of RetinaFace, based on Original Image Size
 
-| Models                        | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) | Infer (ms) |
-| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- | ---------- |
-| MobileNetV1 (width mult=0.25) | False    | 90.70% | 88.12% | 73.82% |             |            |            |
-| MobileNetV1 (width mult=0.50) | False    | 91.56% | 89.46% | 76.56% |             |            |            |
-| MobileNetV1                   | False    |        |        |        |             |            |            |
-| MobileNetV2                   | True     |        |        |        |             |            |            |
-| ResNet18                      | True     |        |        |        |             |            |            |
-| ResNet34                      | True     |        |        |        |             |            |            |
-| ResNet50                      | True     |        |        |        |             |            |            |
+| RetinaFace Backbones          | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) |
+| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- |
+| MobileNetV1 (width mult=0.25) | False    | 90.70% | 88.12% | 73.82% | 0.42        |            |
+| MobileNetV1 (width mult=0.50) | False    | 91.56% | 89.46% | 76.56% | 1.65        |            |
+| MobileNetV1                   | False    | 92.19% | 90.41% | 79.56% | 4.16        |            |
+| MobileNetV2                   | True     |        |        |        | 3.12        |            |
+| ResNet18                      | True     |        |        |        | 12.01       |            |
+| ResNet34                      | True     |        |        |        | 22.12       |            |
+| ResNet50                      | True     |        |        |        | 27.29       |            |
 
 ## ✨ Features
 
