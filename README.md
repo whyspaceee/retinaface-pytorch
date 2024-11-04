@@ -24,7 +24,7 @@ In this implementation, we use several lightweight and powerful backbone archite
 | MobileNetV1 (width mult=0.50) | False    | 89.42% | 87.97% | 82.40% | 1.65        |            |
 | MobileNetV1                   | False    | 90.59% | 89.14% | 84.13% | 4.16        |            |
 | MobileNetV2                   | True     |        |        |        | 3.12        |            |
-| ResNet18                      | True     |        |        |        | 12.01       |            |
+| ResNet18                      | True     | 92.50% | 91.02% | 86.63% | 12.01       |            |
 | ResNet34                      | True     |        |        |        | 22.12       |            |
 | ResNet50                      | True     |        |        |        | 27.29       |            |
 
@@ -36,7 +36,7 @@ In this implementation, we use several lightweight and powerful backbone archite
 | MobileNetV1 (width mult=0.50) | False    | 91.56% | 89.46% | 76.56% | 1.65        |            |
 | MobileNetV1                   | False    | 92.19% | 90.41% | 79.56% | 4.16        |            |
 | MobileNetV2                   | True     |        |        |        | 3.12        |            |
-| ResNet18                      | True     |        |        |        | 12.01       |            |
+| ResNet18                      | True     | 94.28% | 92.69% | 82.95% | 12.01       |            |
 | ResNet34                      | True     |        |        |        | 22.12       |            |
 | ResNet50                      | True     |        |        |        | 27.29       |            |
 
