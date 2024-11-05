@@ -1,6 +1,10 @@
-# 📸 RetinaFace: Single-stage Dense Face Localisation in the Wild | PyTorch 🎯
+# 📸 RetinaFace: Single-stage Dense Face Localisation in the Wild
 
-![Downloads](https://img.shields.io/github/downloads/yakhyo/retinaface-pytorch/total) [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/yakhyo/retinaface-pytorch)
+[![Downloads](https://img.shields.io/github/downloads/yakhyo/retinaface-pytorch/total)](https://github.com/yakhyo/retinaface-pytorch/releases)
+[![GitHub Repo stars](https://img.shields.io/github/stars/yakhyo/retinaface-pytorch)](https://github.com/yakhyo/retinaface-pytorch/stargazers)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/yakhyo/retinaface-pytorch)
+[![GitHub License](https://img.shields.io/github/license/yakhyo/retinaface-pytorch)](https://github.com/yakhyo/retinaface-pytorch/blob/main/LICENSE)
+
 <video controls autoplay loop src="https://github.com/user-attachments/assets/ad279fea-33fb-43f1-884f-282e6d54c809" muted="false" width="100%"></video>
 
 This is a face detection model for high-precision facial localization based on [RetinaFace: Single-stage Dense Face Localisation in the Wild](https://arxiv.org/abs/1905.00641). This model accurately detects facial landmarks and bounding boxes for faces in images. This repository provides custom training & inference code, and several new backbone models have been integrated for improved performance and flexibility.
@@ -18,27 +22,27 @@ In this implementation, we use several lightweight and powerful backbone archite
 
 ### Results of RetinaFace (MXNet-based Image Size)
 
-| RetinaFace Backbones          | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) |
-| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- |
-| MobileNetV1 (width mult=0.25) | False    | 88.48% | 87.02% | 80.61% | 0.42        |            |
-| MobileNetV1 (width mult=0.50) | False    | 89.42% | 87.97% | 82.40% | 1.65        |            |
-| MobileNetV1                   | False    | 90.59% | 89.14% | 84.13% | 4.16        |            |
-| MobileNetV2                   | True     |        |        |        | 3.12        |            |
-| ResNet18                      | True     | 92.50% | 91.02% | 86.63% | 12.01       |            |
-| ResNet34                      | True     |        |        |        | 22.12       |            |
-| ResNet50                      | True     |        |        |        | 27.29       |            |
+| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       | #Params (M) |
+| ----------------------------- | ---------------------- | ---------- | ---------- | ---------- | ----------- |
+| MobileNetV1 (width mult=0.25) | False                  | 88.48%     | 87.02%     | 80.61%     | 0.42        |
+| MobileNetV1 (width mult=0.50) | False                  | 89.42%     | 87.97%     | 82.40%     | 1.65        |
+| MobileNetV1                   | False                  | 90.59%     | 89.14%     | 84.13%     | 4.16        |
+| MobileNetV2                   | True                   | 91.70%     | 91.03%     | 86.60%     | 3.12        |
+| ResNet18                      | True                   | 92.50%     | 91.02%     | 86.63%     | 12.01       |
+| ResNet34                      | True                   | **94.16%** | **93.12%** | **88.90%** | 22.12       |
+| ResNet50                      | True                   |            |            |            | 27.29       |
 
 ### Results of RetinaFace, based on Original Image Size
 
-| RetinaFace Backbones          | Pretrain | Easy   | Medium | Hard   | #Params (M) | #Flops (G) |
-| ----------------------------- | -------- | ------ | ------ | ------ | ----------- | ---------- |
-| MobileNetV1 (width mult=0.25) | False    | 90.70% | 88.12% | 73.82% | 0.42        |            |
-| MobileNetV1 (width mult=0.50) | False    | 91.56% | 89.46% | 76.56% | 1.65        |            |
-| MobileNetV1                   | False    | 92.19% | 90.41% | 79.56% | 4.16        |            |
-| MobileNetV2                   | True     |        |        |        | 3.12        |            |
-| ResNet18                      | True     | 94.28% | 92.69% | 82.95% | 12.01       |            |
-| ResNet34                      | True     |        |        |        | 22.12       |            |
-| ResNet50                      | True     |        |        |        | 27.29       |            |
+| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       | #Params (M) |
+| ----------------------------- | ---------------------- | ---------- | ---------- | ---------- | ----------- |
+| MobileNetV1 (width mult=0.25) | False                  | 90.70%     | 88.12%     | 73.82%     | 0.42        |
+| MobileNetV1 (width mult=0.50) | False                  | 91.56%     | 89.46%     | 76.56%     | 1.65        |
+| MobileNetV1                   | False                  | 92.19%     | 90.41%     | 79.56%     | 4.16        |
+| MobileNetV2                   | True                   | 94.04%     | 92.26%     | 83.59%     | 3.12        |
+| ResNet18                      | True                   | 94.28%     | 92.69%     | 82.95%     | 12.01       |
+| ResNet34                      | True                   | **95.07%** | **93.48%** | **84.40%** | 22.12       |
+| ResNet50                      | True                   |            |            |            | 27.29       |
 
 ## ✨ Features
 
@@ -80,7 +84,7 @@ This RetinaFace implementation supports the following feature extractor backbone
 1. **Download the Dataset**:
 
    - Download the [WIDERFACE](http://shuoyang1213.me/WIDERFACE/WiderFace_Results.html) dataset.
-   - Download annotations (face bounding boxes & five facial landmarks) from [Baidu Cloud](https://pan.baidu.com/s/1Laby0EctfuJGgGMgRRgykA) or [Dropbox](https://www.dropbox.com/s/7j70r3eeepe4r2g/retinaface_gt_v1.1.zip?dl=0).
+   - Download annotations (face bounding boxes & five facial landmarks) from [Baidu Cloud](https://pan.baidu.com/s/1Laby0EctfuJGgGMgRRgykA) (password: `fstq`) or [Dropbox](https://www.dropbox.com/s/7j70r3eeepe4r2g/retinaface_gt_v1.1.zip?dl=0).
 
 2. **Organize the Dataset Directory**:
 
@@ -109,6 +113,8 @@ To train the RetinaFace model with a specific backbone, use the following comman
 ```bash
 python train.py --network mobilenetv1  # Replace 'mobilenetv1' with your choice of backbone
 ```
+
+Download [mobilenetv1_0.25.pretrained](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/mobilenetv1_0.25.pretrained) (weights ported from @biubug6) to reproduce the results.
 
 ### 🎛️ Available Backbone Options:
 
