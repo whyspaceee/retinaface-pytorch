@@ -1,7 +1,7 @@
 import cv2
 import random
 import numpy as np
-from typing import  Tuple
+from typing import Tuple
 
 from utils.box_utils import matrix_iof
 
@@ -58,7 +58,7 @@ def _crop(image, boxes, labels, landmarks, image_size):
         # make sure that the cropped image contains at least one face > 16 pixel at training image scale
         b_w_t = (boxes_t[:, 2] - boxes_t[:, 0] + 1) / w * image_size
         b_h_t = (boxes_t[:, 3] - boxes_t[:, 1] + 1) / h * image_size
-        mask_b = np.minimum(b_w_t, b_h_t) > 16.0
+        mask_b = np.minimum(b_w_t, b_h_t) > 0.0
         boxes_t = boxes_t[mask_b]
         labels_t = labels_t[mask_b]
         landmarks_t = landmarks_t[mask_b]

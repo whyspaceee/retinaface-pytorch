@@ -1,5 +1,6 @@
 import os
 import cv2
+import time
 import argparse
 import numpy as np
 
@@ -10,7 +11,6 @@ from config import get_config
 from models import RetinaFace
 from utils.box_utils import decode, decode_landmarks, nms
 
-from utils.timer import Timer
 
 
 def parse_arguments():
@@ -124,8 +124,6 @@ def main(params):
         test_dataset = fr.read().split()
     num_images = len(test_dataset)
 
-    forward_pass = Timer()
-
     # testing begin
     for idx, img_name in enumerate(test_dataset):
         image_path = testset_folder + img_name
@@ -147,9 +145,9 @@ def main(params):
         image = image.to(device)
 
         # forward pass
-        forward_pass.tic()
+        st = time.time()
         loc, conf, landmarks = inference(model, image)  # forward pass
-        forward_pass.toc()
+        forward_pass = time.time() - st
 
         # generate anchor boxes
         priorbox = PriorBox(cfg, image_size=(img_height, img_width))
@@ -202,10 +200,8 @@ def main(params):
                 h = int(box[3]) - int(box[1])
                 confidence = str(box[4])
                 fd.write(f"{x} {y} {w} {h} {confidence}\n")
-                # line = str(x) + " " + str(y) + " " + str(w) + " " + str(h) + " " + confidence + " \n"
-                # fd.write(line)
 
-        print('im_detect: {:d}/{:d} forward_pass_time: {:.4f}s'.format(idx + 1, num_images, forward_pass.average_time))
+        print('im_detect: {:d}/{:d} forward_pass_time: {:.4f}s'.format(idx + 1, num_images, forward_pass))
 
 
 if __name__ == '__main__':

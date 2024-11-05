@@ -42,7 +42,7 @@ def parse_args():
     parser.add_argument('--print-freq', type=int, default=10, help='Print frequency during training.')
 
     # Optimizer and scheduler arguments
-    parser.add_argument('--learning-rate', default=0.01, type=float, help='Initial learning rate.')
+    parser.add_argument('--learning-rate', default=1e-3, type=float, help='Initial learning rate.')
     parser.add_argument('--lr-warmup-epochs', type=int, default=1, help='Number of warmup epochs.')
     parser.add_argument('--power', type=float, default=0.9, help='Power for learning rate policy.')
     parser.add_argument('--momentum', default=0.9, type=float, help='Momentum factor in SGD optimizer.')
@@ -109,10 +109,10 @@ def train_one_epoch(
         if (batch_idx + 1) % print_freq == 0:
             lr = optimizer.param_groups[0]["lr"]
             print(
-                f'Epoch: {epoch + 1} | Batch: {batch_idx + 1}/{len(data_loader)} | '
-                f'Loss Localization : {loss_loc.item():.4f} | Classification: {loss_conf.item():.4f} | '
-                f'Landmarks: {loss_land.item():.4f} | '
-                f'LR: {lr:.8f} | Time: {(time.time() - start_time):.4f} s'
+                f"Epoch: {epoch + 1}/{cfg['epochs']} | Batch: {batch_idx + 1}/{len(data_loader)} | "
+                f"Loss Localization : {loss_loc.item():.4f} | Classification: {loss_conf.item():.4f} | "
+                f"Landmarks: {loss_land.item():.4f} | "
+                f"LR: {lr:.8f} | Time: {(time.time() - start_time):.4f} s"
             )
         batch_loss.append(loss.item())
     print(f"Average batch loss: {np.mean(batch_loss):.7f}")
@@ -165,12 +165,12 @@ def main(params):
     start_epoch = 0
     if params.resume:
         try:
-            checkpoint = torch.load(f"{params.save_dir}/checkpoint.ckpt", map_location="cpu", weights_only=True)
+            checkpoint = torch.load(f"{params.save_dir}/{params.network}_checkpoint.ckpt", map_location="cpu", weights_only=True)
             model.load_state_dict(checkpoint["model"])
             optimizer.load_state_dict(checkpoint["optimizer"])
             lr_scheduler.load_state_dict(checkpoint["lr_scheduler"])
             start_epoch = checkpoint["epoch"] + 1
-            print(f"Checkpoint successfully loaded from {params.save_dir}/checkpoint.ckpt")
+            print(f"Checkpoint successfully loaded from {params.save_dir}/{params.network}_checkpoint.ckpt")
         except Exception as e:
             print(f"Exception occurred while loading checkpoint, exception message: {e}")
 

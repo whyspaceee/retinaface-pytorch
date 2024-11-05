@@ -27,9 +27,10 @@ class Conv2dNormActivation(nn.Sequential):
             padding: Optional = None,
             groups: int = 1,
             norm_layer: Optional[Callable[..., torch.nn.Module]] = torch.nn.BatchNorm2d,
-            activation_layer: Optional[Callable[..., torch.nn.Module]] = torch.nn.ReLU,
+            activation_layer: Optional[Callable[..., torch.nn.Module]] = torch.nn.LeakyReLU,
             dilation: int = 1,
             inplace: Optional[bool] = True,
+            negative_slope: Optional[float] = None,
             bias: bool = False,
     ) -> None:
 
@@ -53,6 +54,8 @@ class Conv2dNormActivation(nn.Sequential):
 
         if activation_layer is not None:
             params = {} if inplace is None else {"inplace": inplace}
+            if negative_slope is not None:
+                params["negative_slope"] = negative_slope
             layers.append(activation_layer(**params))
         super().__init__(*layers)
 
@@ -80,9 +83,10 @@ class DepthWiseSeparableConv2d(nn.Sequential):
                 in_channels,
                 kernel_size=3,
                 stride=stride,
-                groups=in_channels
+                groups=in_channels,
+                negative_slope=0.1
             ),  # Depthwise
-            Conv2dNormActivation(in_channels, out_channels, kernel_size=1)  # Pointwise
+            Conv2dNormActivation(in_channels, out_channels, kernel_size=1, negative_slope=0.1)  # Pointwise
         ]
 
         super().__init__(*layers)
@@ -94,28 +98,39 @@ class SSH(nn.Module):
     Combines 3x3, 5x5, and 7x7 convolutions with batch normalization and optional LeakyReLU activations.
     """
 
-    def __init__(self, in_channel: int, out_channel: int) -> None:
+    def __init__(self, in_channel: int, out_channels: int) -> None:
         """
         Initializes the SSH module.
 
         Args:
             in_channel (int): Number of input channels.
-            out_channel (int): Number of output channels, must be divisible by 4.
+            out_channels (int): Number of output channels, must be divisible by 4.
         """
         super().__init__()
 
-        assert out_channel % 4 == 0, "Output channel must be divisible by 4."
+        assert out_channels % 4 == 0, "Output channel must be divisible by 4."
+        leaky = 0.1 if out_channels <= 64 else 0
 
         # 3x3 Convolution branch
-        self.conv3X3 = Conv2dNormActivation(in_channel, out_channel // 2, kernel_size=3, activation_layer=None)
+        self.conv3X3 = Conv2dNormActivation(in_channel, out_channels // 2, kernel_size=3, activation_layer=None)
 
         # 5x5 Convolution branch
-        self.conv5X5_1 = Conv2dNormActivation(in_channel, out_channel // 4, kernel_size=3)
-        self.conv5X5_2 = Conv2dNormActivation(out_channel // 4, out_channel // 4, kernel_size=3,  activation_layer=None)
+        self.conv5X5_1 = Conv2dNormActivation(in_channel, out_channels // 4, kernel_size=3, negative_slope=leaky)
+        self.conv5X5_2 = Conv2dNormActivation(
+            out_channels // 4,
+            out_channels // 4,
+            kernel_size=3,
+            activation_layer=None
+        )
 
         # 7x7 Convolution branch
-        self.conv7X7_2 = Conv2dNormActivation(out_channel // 4, out_channel // 4, kernel_size=3)
-        self.conv7x7_3 = Conv2dNormActivation(out_channel // 4, out_channel // 4, kernel_size=3, activation_layer=None)
+        self.conv7X7_2 = Conv2dNormActivation(out_channels // 4, out_channels // 4, kernel_size=3, negative_slope=leaky)
+        self.conv7x7_3 = Conv2dNormActivation(
+            out_channels // 4,
+            out_channels // 4,
+            kernel_size=3,
+            activation_layer=None
+        )
 
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -150,14 +165,15 @@ class FPN(nn.Module):
             out_channels (int): Number of output channels for the feature pyramid.
         """
         super().__init__()
+        leaky = 0.1 if out_channels <= 64 else 0
         # Define 1x1 convolution output layers
-        self.output1 = Conv2dNormActivation(in_channels_list[0], out_channels, kernel_size=1)
-        self.output2 = Conv2dNormActivation(in_channels_list[1], out_channels, kernel_size=1)
-        self.output3 = Conv2dNormActivation(in_channels_list[2], out_channels, kernel_size=1)
+        self.output1 = Conv2dNormActivation(in_channels_list[0], out_channels, kernel_size=1, negative_slope=leaky)
+        self.output2 = Conv2dNormActivation(in_channels_list[1], out_channels, kernel_size=1, negative_slope=leaky)
+        self.output3 = Conv2dNormActivation(in_channels_list[2], out_channels, kernel_size=1, negative_slope=leaky)
 
         # Define merge layers using 3x3 convolutions
-        self.merge1 = Conv2dNormActivation(out_channels, out_channels, kernel_size=3)
-        self.merge2 = Conv2dNormActivation(out_channels, out_channels, kernel_size=3)
+        self.merge1 = Conv2dNormActivation(out_channels, out_channels, kernel_size=3, negative_slope=leaky)
+        self.merge2 = Conv2dNormActivation(out_channels, out_channels, kernel_size=3, negative_slope=leaky)
 
     def forward(self, inputs) -> List[Tensor]:
         """

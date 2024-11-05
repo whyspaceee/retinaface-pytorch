@@ -22,8 +22,8 @@ cfg_mnet_025 = {
     'epochs': 250,
     'milestones': [190, 220],
     'image_size': 640,
-    'pretrain': False,
-    'return_layers': [5, 11, 13],
+    'pretrain': True,
+    'return_layers': {'stage1': 1, 'stage2': 2, 'stage3': 3},
     'in_channel': 32,
     'out_channel': 64
 }
@@ -40,7 +40,7 @@ cfg_mnet_050 = {
     'milestones': [190, 220],
     'image_size': 640,
     'pretrain': False,
-    'return_layers': [5, 11, 13],
+    'return_layers': {'stage1': 1, 'stage2': 2, 'stage3': 3},
     'in_channel': 64,
     'out_channel': 128
 }
@@ -56,7 +56,7 @@ cfg_mnet = {
     'milestones': [190, 220],
     'image_size': 640,
     'pretrain': False,
-    'return_layers': [5, 11, 13],
+    'return_layers': {'stage1': 1, 'stage2': 2, 'stage3': 3},
     'in_channel': 128,
     'out_channel': 128
 }
@@ -79,7 +79,7 @@ cfg_mnet_v2 = {
 }
 
 cfg_re18 = {
-    'name': 'Resnet18',
+    'name': 'resnet18',
     'min_sizes': [[16, 32], [64, 128], [256, 512]],
     'steps': [8, 16, 32],
     'variance': [0.1, 0.2],
@@ -95,7 +95,7 @@ cfg_re18 = {
     'out_channel': 128
 }
 cfg_re34 = {
-    'name': 'Resnet34',
+    'name': 'resnet34',
     'min_sizes': [[16, 32], [64, 128], [256, 512]],
     'steps': [8, 16, 32],
     'variance': [0.1, 0.2],
@@ -112,7 +112,7 @@ cfg_re34 = {
 }
 
 cfg_re50 = {
-    'name': 'Resnet50',
+    'name': 'resnet50',
     'min_sizes': [[16, 32], [64, 128], [256, 512]],
     'steps': [8, 16, 32],
     'variance': [0.1, 0.2],

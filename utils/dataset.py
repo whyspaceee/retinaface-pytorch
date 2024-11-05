@@ -27,7 +27,7 @@ class WiderFaceDetection(data.Dataset):
                 image_path = os.path.join(root, 'images', line[2:])
                 self.image_paths.append(image_path)
             else:
-                labels.append([float(x) for x in line.split()])
+                labels.append([float(x) for x in line.split(' ')])
         self.words.append(labels)
 
     def __len__(self):

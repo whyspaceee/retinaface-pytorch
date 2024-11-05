@@ -14,9 +14,8 @@ from models.backbones import (
     resnet34,
     resnet50
 )
-from models.backbones.mobilenetv1 import IntermediateLayerGetterByIndex
-
-from models.common import SSH, FPN
+from torchvision import models
+from models.common import SSH, FPN, IntermediateLayerGetterByIndex
 
 
 def get_layer_extractor(cfg, backbone):
@@ -30,9 +29,7 @@ def get_layer_extractor(cfg, backbone):
     Returns:
         IntermediateLayerGetter or IntermediateLayerGetterByIndex: The appropriate layer getter.
     """
-    if cfg['name'] in ["mobilenet0.25", "mobilenet0.50", "mobilenet_v1"]:
-        return IntermediateLayerGetterByIndex(backbone, [5, 11, 13])
-    elif cfg['name'] == "mobilenet_v2":
+    if cfg['name'] == "mobilenet_v2":
         return IntermediateLayerGetterByIndex(backbone, [6, 13, 18])
     else:
         return _utils.IntermediateLayerGetter(backbone, cfg['return_layers'])
@@ -50,13 +47,13 @@ def build_backbone(name, pretrained=False):
         nn.Module: The chosen backbone network.
     """
     backbone_map = {
-        'mobilenet0.25': mobilenet_v1_025,
+        'mobilenet0.25': lambda: mobilenet_v1_025(pretrained=pretrained),
         'mobilenet0.50': mobilenet_v1_050,
         'mobilenet_v1': mobilenet_v1,
         'mobilenet_v2': lambda: mobilenet_v2(pretrained=pretrained),
-        'Resnet50': lambda: resnet50(pretrained=pretrained),
-        'Resnet34': lambda: resnet34(pretrained=pretrained),
-        'Resnet18': lambda: resnet18(pretrained=pretrained)
+        'resnet50': lambda: resnet50(pretrained=pretrained),
+        'resnet34': lambda: resnet34(pretrained=pretrained),
+        'resnet18': lambda: resnet18(pretrained=pretrained)
     }
 
     if name not in backbone_map:
