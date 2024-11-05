@@ -52,7 +52,7 @@ In this implementation, we use several lightweight and powerful backbone archite
 - 📈 **MobileNetV2**: [Inverted Residuals and Linear Bottlenecks](https://arxiv.org/abs/1801.04381) - Improved efficiency for mobile use-cases with advanced architecture.
 - 🔍 **ResNet Models (18, 34, 50)**: [Deep Residual Networks](https://arxiv.org/abs/1512.03385) - Enhanced accuracy with deeper residual connections, supporting a range of model complexities.
 
-### 📅 Last Updated: October 27, 2024
+### 📅 Last Updated: November 5, 2024
 
 ## ⚙️ Installation
 
