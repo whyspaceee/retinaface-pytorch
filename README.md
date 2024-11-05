@@ -114,7 +114,7 @@ To train the RetinaFace model with a specific backbone, use the following comman
 python train.py --network mobilenetv1  # Replace 'mobilenetv1' with your choice of backbone
 ```
 
-Download [mobilenetv1_0.25.pretrained](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/mobilenetv1_0.25.pretrained) (weights ported from @biubug6) to reproduce the results.
+Download [mobilenetv1_0.25.pretrained](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/mobilenetv1_025.pretrained) (pre-trained weights on ImageNet, weights ported from @biubug6) to reproduce the results.
 
 ### 🎛️ Available Backbone Options:
 
