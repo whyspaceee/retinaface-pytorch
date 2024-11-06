@@ -13,7 +13,7 @@ This is a face detection model for high-precision facial localization based on [
 > We've updated the codebase with new trained models and a refactored structure, enhancing functionality and maintainability. These improvements include support for MobileNetV1 (including v1_025 and v1_050), MobileNetV2, and various ResNet versions (18, 34, 50), offering a cleaner and more reproducible experience.
 
 <div align="center">
-<img src="assets/res34_test.jpg">
+<img src="assets/mv2_test.jpg">
 </div>
 
 In this implementation, we use several lightweight and powerful backbone architectures to provide flexibility between performance and accuracy.
@@ -153,6 +153,11 @@ Inference the model using:
 ```bash
 python detect.py --network mobilenetv1 --weights retinaface_mv1.pth
 ```
+
+<div align="center">
+<p>Using MobileNet v2 as a backbone, 632 faces found on large selfi image, see the `assets` folder.</p>
+<img src="assets/mv2_large_selfi_632people.jpg">
+</div>
 
 ## 🧪 Evaluating RetinaFace on WiderFace Dataset
 
