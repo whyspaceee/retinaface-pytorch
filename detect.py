@@ -11,6 +11,7 @@ from config import get_config
 from models import RetinaFace
 from utils.box_utils import decode, decode_landmarks, nms
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Inference Arguments for RetinaFace")
 
@@ -104,25 +105,38 @@ def draw_detections(original_image, detections, vis_threshold):
         detections (ndarray): Array of detected bounding boxes and landmarks.
         vis_threshold (float): The confidence threshold for displaying detections.
     """
-    cnt = 0
-    for det in detections:
-        if det[4] < vis_threshold:
-            continue
-        cnt += 1
+
+    # Colors for visualization
+    LANDMARK_COLORS = [
+        (0, 0, 255),    # Right eye (Red)
+        (0, 255, 255),  # Left eye (Yellow)
+        (255, 0, 255),  # Nose (Magenta)
+        (0, 255, 0),    # Right mouth (Green)
+        (255, 0, 0)     # Left mouth (Blue)
+    ]
+    BOX_COLOR = (0, 0, 255)
+    TEXT_COLOR = (255, 255, 255)
+
+    # Filter by confidence
+    detections = detections[detections[:, 4] >= vis_threshold]
+
+    # Slice arrays efficiently
+    boxes = detections[:, 0:4].astype(np.int32)
+    scores = detections[:, 4]
+    landmarks = detections[:, 5:15].reshape(-1, 5, 2).astype(np.int32)
+
+    for box, score, landmark in zip(boxes, scores, landmarks):
         # Draw bounding box
-        text = "{:.4f}".format(det[4])
-        det = list(map(int, det))
-        cv2.rectangle(original_image, (det[0], det[1]), (det[2], det[3]), (0, 0, 255), 2)
-        cx, cy = det[0], det[1] + 12
-        cv2.putText(original_image, text, (cx, cy), cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255))
+        cv2.rectangle(original_image, (box[0], box[1]), (box[2], box[3]), BOX_COLOR, 2)
+
+        # Draw confidence score
+        text = f"{score:.2f}"
+        cx, cy = box[0], box[1] + 12
+        cv2.putText(original_image, text, (cx, cy), cv2.FONT_HERSHEY_DUPLEX, 0.5, TEXT_COLOR)
 
         # Draw landmarks
-        cv2.circle(original_image, (det[5], det[6]), 1, (0, 0, 255), 4)
-        cv2.circle(original_image, (det[7], det[8]), 1, (0, 255, 255), 4)
-        cv2.circle(original_image, (det[9], det[10]), 1, (255, 0, 255), 4)
-        cv2.circle(original_image, (det[11], det[12]), 1, (0, 255, 0), 4)
-        cv2.circle(original_image, (det[13], det[14]), 1, (255, 0, 0), 4)
-    print("cnt", cnt)
+        for point, color in zip(landmark, LANDMARK_COLORS):
+            cv2.circle(original_image, point, 1, color, 4)
 
 
 def main(params):

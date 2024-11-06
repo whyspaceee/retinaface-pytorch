@@ -1,11 +1,9 @@
 import os
 import argparse
-import numpy as np
-
 import torch
 
 from models import RetinaFace
-from config import cfg_mnet, cfg_mnet_025, cfg_mnet_050, cfg_mnet_v2, cfg_re50, cfg_re34, cfg_re18
+from config import get_config
 
 
 def parse_arguments():
@@ -28,66 +26,62 @@ def parse_arguments():
         help='Backbone network architecture to use'
     )
 
-    args = parser.parse_args()
-
-    return args
-
-
-def get_config(network):
-    configs = {
-        "mobilenetv1": cfg_mnet,
-        "mobilenetv1_0.25": cfg_mnet_025,
-        "mobilenetv1_0.50": cfg_mnet_050,
-        "mobilenetv2": cfg_mnet_v2,
-        "resnet50": cfg_re50,
-        "resnet34": cfg_re34,
-        "resnet18": cfg_re18
-    }
-    return configs.get(network, None)
+    return parser.parse_args()
 
 
 @torch.no_grad()
 def onnx_export(params):
-    torch.set_grad_enabled(False)
-
+    # Get model configuration
     cfg = get_config(params.network)
     if cfg is None:
         raise KeyError(f"Config file for {params.network} not found!")
+
+    # Set device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # model initialization
+    # Initialize model
     model = RetinaFace(cfg=cfg)
     model.to(device)
 
-    # loading state_dict
+    # Load weights
     state_dict = torch.load(params.weights, map_location=device, weights_only=True)
     model.load_state_dict(state_dict)
     print("Model loaded successfully!")
 
-    # set to evaluation mode
+    # Set model to evaluation mode
     model.eval()
 
-    fname = os.path.splitext(os.path.basename(args.weights))[0]
+    # Generate output filename
+    fname = os.path.splitext(os.path.basename(params.weights))[0]
     onnx_model = f'{fname}.onnx'
-    print("==> Exporting model to ONNX format at '{}'".format(onnx_model))
+    print(f"==> Exporting model to ONNX format at '{onnx_model}'")
 
-    # create a dummy input with the same size which is used during training
+    # Create dummy input (batch_size=1, channels=3, height=640, width=640)
     x = torch.randn(1, 3, 640, 640).to(device)
 
-    # export to onnx
-    torch_out = torch.onnx.export(
-        model,
-        x,
-        onnx_model,
-        export_params=True,
-        verbose=False,
-        input_names=['input'],
-        output_names=['output'],
+    # Export model to ONNX
+    torch.onnx.export(
+        model,                # PyTorch Model
+        x,                    # Model input
+        onnx_model,          # Output file path
+        export_params=True,   # Store the trained parameter weights inside the model file
+        opset_version=11,    # ONNX version to export the model to
+        do_constant_folding=True,  # Whether to execute constant folding for optimization
+        input_names=['input'],     # Model's input names
+        output_names=['loc', 'conf', 'landmarks'],  # Model's output names
         dynamic_axes={
-            'input': {0: 'batch_size', 2: 'height', 3: 'width'},
-            'output': {0: 'batch_size'}
+            'input': {
+                0: 'batch_size',
+                2: 'height',
+                3: 'width'
+            },
+            'loc': {0: 'batch_size'},      # Location output
+            'conf': {0: 'batch_size'},     # Confidence output
+            'landmarks': {0: 'batch_size'}  # Landmarks output
         }
     )
+
+    print(f"Model exported successfully to {onnx_model}")
 
 
 if __name__ == '__main__':
