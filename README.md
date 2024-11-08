@@ -45,7 +45,8 @@ In this implementation, we use several lightweight and powerful backbone archite
 | ResNet50                      | True                   |            |            |            |
 
 ## ✨ Features
-
+- 🎥 **Webcam Inference**: Real-time inference capability using a webcam for direct application testing and live demos.
+- 🔄 **ONNX Export & Inference**: Enables model export to ONNX format for versatile deployment and cross-platform inference.
 - ✅ **Cleaner & Reproducible Code**: Refactored for simplicity and consistency, making it easier to use and maintain.
 - 📱 **MobileNetV1_0.25 & MobileNetV1_0.50**: Lightweight versions for faster inference with reduced computational cost.
 - 📲 **MobileNetV1**: [Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/abs/1704.04861) - Optimized for mobile and low-power applications.
@@ -143,7 +144,7 @@ Download [mobilenetv1_0.25.pretrained](https://github.com/yakhyo/retinaface-pyto
 | ---------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | ResNet18   | [retinaface_r18.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.pth) | [retinaface_r18.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.onnx) |
 | ResNet34   | [retinaface_r34.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.pth) | [retinaface_r34.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.onnx) |
-| ResNet50   | [retinaface_r50.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r50.pth) | [retinaface_r50.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r50.onnx) |
+| ResNet50   | [retinaface_r50.pth](#) | [retinaface_r50.onnx](#) |
 |            |
 
 ## 📊 Inference
