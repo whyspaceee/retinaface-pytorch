@@ -144,8 +144,7 @@ Download [mobilenetv1_0.25.pretrained](https://github.com/yakhyo/retinaface-pyto
 | ---------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | ResNet18   | [retinaface_r18.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.pth) | [retinaface_r18.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.onnx) |
 | ResNet34   | [retinaface_r34.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.pth) | [retinaface_r34.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.onnx) |
-| ResNet50   | [retinaface_r50.pth](#) | [retinaface_r50.onnx](#) |
-|            |
+| ResNet50   | [not available](#) | [not available](#) |
 
 ## 📊 Inference
 
