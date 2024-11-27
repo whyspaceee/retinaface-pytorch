@@ -5,7 +5,6 @@
 > **UniFace** supports face detection, alignment, and more!  
 > [![PyPI Version](https://img.shields.io/pypi/v/uniface.svg)](https://pypi.org/project/uniface/) [![GitHub Stars](https://img.shields.io/github/stars/yakhyo/uniface)](https://github.com/yakhyo/uniface/stargazers) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-
 [![Downloads](https://img.shields.io/github/downloads/yakhyo/retinaface-pytorch/total)](https://github.com/yakhyo/retinaface-pytorch/releases)
 [![GitHub Repo stars](https://img.shields.io/github/stars/yakhyo/retinaface-pytorch)](https://github.com/yakhyo/retinaface-pytorch/stargazers)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/yakhyo/retinaface-pytorch)
@@ -24,9 +23,23 @@ This is a face detection model for high-precision facial localization based on [
 
 In this implementation, we use several lightweight and powerful backbone architectures to provide flexibility between performance and accuracy.
 
-## 📈 Results on WiderFace Eval
+## ✨ Features
 
-### Results of RetinaFace (MXNet-based Image Size)
+| Date       | Feature Description                                                                                                                                                                           |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2024-11-27 | 🔄 **New trained model weights**: Filtering out smaller faces (<16 pixels) to decrease false positives.                                                                                       |
+| 2024-11-05 | 🎥 **Webcam Inference**: Real-time inference capability using a webcam for direct application testing and live demos.                                                                         |
+| 2024-11-05 | 🔄 **ONNX Export & Inference**: Enables model export to ONNX format for versatile deployment and cross-platform inference.                                                                    |
+| 2024-11-05 | ✅ **Cleaner & Reproducible Code**: Refactored for simplicity and consistency, making it easier to use and maintain.                                                                          |
+| 2024-11-05 | 📱 **MobileNetV1_0.25 & MobileNetV1_0.50**: Lightweight versions for faster inference with reduced computational cost.                                                                        |
+| 2024-11-05 | 📲 **MobileNetV1**: [Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/abs/1704.04861) - Optimized for mobile and low-power applications.             |
+| 2024-11-05 | 📈 **MobileNetV2**: [Inverted Residuals and Linear Bottlenecks](https://arxiv.org/abs/1801.04381) - Improved efficiency for mobile use-cases with advanced architecture.                      |
+| 2024-11-05 | 🔍 **ResNet Models (18, 34, 50)**: [Deep Residual Networks](https://arxiv.org/abs/1512.03385) - Enhanced accuracy with deeper residual connections, supporting a range of model complexities. |
+
+
+## 📈 Results on WiderFace Evaluation Set
+
+### Multi-scale image resizing
 
 | RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       |
 | ----------------------------- | ---------------------- | ---------- | ---------- | ---------- |
@@ -38,7 +51,7 @@ In this implementation, we use several lightweight and powerful backbone archite
 | ResNet34                      | True                   | **94.16%** | **93.12%** | **88.90%** |
 | ResNet50                      | True                   |            |            |            |
 
-### Results of RetinaFace, based on Original Image Size
+### Original image size
 
 | RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       |
 | ----------------------------- | ---------------------- | ---------- | ---------- | ---------- |
@@ -50,16 +63,35 @@ In this implementation, we use several lightweight and powerful backbone archite
 | ResNet34                      | True                   | **95.07%** | **93.48%** | **84.40%** |
 | ResNet50                      | True                   |            |            |            |
 
-## ✨ Features
-- 🎥 **Webcam Inference**: Real-time inference capability using a webcam for direct application testing and live demos.
-- 🔄 **ONNX Export & Inference**: Enables model export to ONNX format for versatile deployment and cross-platform inference.
-- ✅ **Cleaner & Reproducible Code**: Refactored for simplicity and consistency, making it easier to use and maintain.
-- 📱 **MobileNetV1_0.25 & MobileNetV1_0.50**: Lightweight versions for faster inference with reduced computational cost.
-- 📲 **MobileNetV1**: [Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/abs/1704.04861) - Optimized for mobile and low-power applications.
-- 📈 **MobileNetV2**: [Inverted Residuals and Linear Bottlenecks](https://arxiv.org/abs/1801.04381) - Improved efficiency for mobile use-cases with advanced architecture.
-- 🔍 **ResNet Models (18, 34, 50)**: [Deep Residual Networks](https://arxiv.org/abs/1512.03385) - Enhanced accuracy with deeper residual connections, supporting a range of model complexities.
+## 📈 Results on WiderFace Evaluation Set (filtered out faces smaller than `16 pixels`)
 
-### 📅 Last Updated: November 5, 2024
+- Check the line 61 in `transform.py`
+- Makes less FP and good at `easy` & `medium` samples, but does not perform well on `hard` samples.
+
+### Multi-scale image resizing
+
+| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       |
+| ----------------------------- | ---------------------- | ---------- | ---------- | ---------- |
+| MobileNetV1 (width mult=0.25) | True                   | 89.02%     | 87.34%     | 80.04%     |
+| MobileNetV1 (width mult=0.50) | False                  | 89.54%     | 87.93%     | 82.24%     |
+| MobileNetV1                   | False                  | 91.29%     | 89.87%     | 84.36%     |
+| MobileNetV2                   | True                   | 92.78%     | 92.34%     | 87.51%     |
+| ResNet18                      | True                   | 92.26%     | 91.63%     | 86.88%     |
+| ResNet34                      | True                   | **94.19%** | **93.29%** | **88.94%** |
+| ResNet50                      | True                   |            |            |            |
+
+### Original image size
+
+| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard   |
+| ----------------------------- | ---------------------- | ---------- | ---------- | ------ |
+| MobileNetV1 (width mult=0.25) | True                   | 91.68%     | 89.69%     | 61.49% |
+| MobileNetV1 (width mult=0.50) | False                  | 92.22%     | 90.49%     | 62.93% |
+| MobileNetV1                   | False                  | 93.65%     | 92.00%     | 64.72% |
+| MobileNetV2                   | True                   | 95.23%     | 94.13%     | 67.75% |
+| ResNet18                      | True                   | 95.21%     | 93.90%     | 67.00% |
+| ResNet34                      | True                   | **95.81%** | **94.60%** | 67.66% |
+| ResNet50                      | True                   |            |            |        |
+
 
 ## ⚙️ Installation
 
@@ -150,7 +182,7 @@ Download [mobilenetv1_0.25.pretrained](https://github.com/yakhyo/retinaface-pyto
 | ---------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | ResNet18   | [retinaface_r18.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.pth) | [retinaface_r18.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r18.onnx) |
 | ResNet34   | [retinaface_r34.pth](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.pth) | [retinaface_r34.onnx](https://github.com/yakhyo/retinaface-pytorch/releases/download/v0.0.1/retinaface_r34.onnx) |
-| ResNet50   | [not available](#) | [not available](#) |
+| ResNet50   | [not available](#)                                                                                             | [not available](#)                                                                                               |
 
 ## 📊 Inference
 
