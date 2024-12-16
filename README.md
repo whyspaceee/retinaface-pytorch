@@ -41,27 +41,27 @@ In this implementation, we use several lightweight and powerful backbone archite
 
 ### Multi-scale image resizing
 
-| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       |
-| ----------------------------- | ---------------------- | ---------- | ---------- | ---------- |
-| MobileNetV1 (width mult=0.25) | True                   | 88.48%     | 87.02%     | 80.61%     |
-| MobileNetV1 (width mult=0.50) | False                  | 89.42%     | 87.97%     | 82.40%     |
-| MobileNetV1                   | False                  | 90.59%     | 89.14%     | 84.13%     |
-| MobileNetV2                   | True                   | 91.70%     | 91.03%     | 86.60%     |
-| ResNet18                      | True                   | 92.50%     | 91.02%     | 86.63%     |
-| ResNet34                      | True                   | **94.16%** | **93.12%** | **88.90%** |
-| ResNet50                      | True                   |            |            |            |
+| RetinaFace Backbones          | Easy       | Medium     | Hard       |
+| ----------------------------- | ---------- | ---------- | ---------- |
+| MobileNetV1 (width mult=0.25) | 88.48%     | 87.02%     | 80.61%     |
+| MobileNetV1 (width mult=0.50) | 89.42%     | 87.97%     | 82.40%     |
+| MobileNetV1                   | 90.59%     | 89.14%     | 84.13%     |
+| MobileNetV2                   | 91.70%     | 91.03%     | 86.60%     |
+| ResNet18                      | 92.50%     | 91.02%     | 86.63%     |
+| ResNet34                      | **94.16%** | **93.12%** | **88.90%** |
+| ResNet50                      |            |            |            |
 
 ### Original image size
 
-| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       |
-| ----------------------------- | ---------------------- | ---------- | ---------- | ---------- |
-| MobileNetV1 (width mult=0.25) | True                   | 90.70%     | 88.12%     | 73.82%     |
-| MobileNetV1 (width mult=0.50) | False                  | 91.56%     | 89.46%     | 76.56%     |
-| MobileNetV1                   | False                  | 92.19%     | 90.41%     | 79.56%     |
-| MobileNetV2                   | True                   | 94.04%     | 92.26%     | 83.59%     |
-| ResNet18                      | True                   | 94.28%     | 92.69%     | 82.95%     |
-| ResNet34                      | True                   | **95.07%** | **93.48%** | **84.40%** |
-| ResNet50                      | True                   |            |            |            |
+| RetinaFace Backbones          | Easy       | Medium     | Hard       |
+| ----------------------------- | ---------- | ---------- | ---------- |
+| MobileNetV1 (width mult=0.25) | 90.70%     | 88.12%     | 73.82%     |
+| MobileNetV1 (width mult=0.50) | 91.56%     | 89.46%     | 76.56%     |
+| MobileNetV1                   | 92.19%     | 90.41%     | 79.56%     |
+| MobileNetV2                   | 94.04%     | 92.26%     | 83.59%     |
+| ResNet18                      | 94.28%     | 92.69%     | 82.95%     |
+| ResNet34                      | **95.07%** | **93.48%** | **84.40%** |
+| ResNet50                      |            |            |            |
 
 ## 📈 Results on WiderFace Evaluation Set (filtered out faces smaller than `16 pixels`)
 
@@ -70,27 +70,27 @@ In this implementation, we use several lightweight and powerful backbone archite
 
 ### Multi-scale image resizing
 
-| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard       |
-| ----------------------------- | ---------------------- | ---------- | ---------- | ---------- |
-| MobileNetV1 (width mult=0.25) | True                   | 89.02%     | 87.34%     | 80.04%     |
-| MobileNetV1 (width mult=0.50) | False                  | 89.54%     | 87.93%     | 82.24%     |
-| MobileNetV1                   | False                  | 91.29%     | 89.87%     | 84.36%     |
-| MobileNetV2                   | True                   | 92.78%     | 92.34%     | 87.51%     |
-| ResNet18                      | True                   | 92.26%     | 91.63%     | 86.88%     |
-| ResNet34                      | True                   | **94.19%** | **93.29%** | **88.94%** |
-| ResNet50                      | True                   |            |            |            |
+| RetinaFace Backbones          | Easy       | Medium     | Hard       |
+| ----------------------------- | ---------- | ---------- | ---------- |
+| MobileNetV1 (width mult=0.25) | 89.02%     | 87.34%     | 80.04%     |
+| MobileNetV1 (width mult=0.50) | 89.54%     | 87.93%     | 82.24%     |
+| MobileNetV1                   | 91.29%     | 89.87%     | 84.36%     |
+| MobileNetV2                   | 92.78%     | 92.34%     | 87.51%     |
+| ResNet18                      | 92.26%     | 91.63%     | 86.88%     |
+| ResNet34                      | **94.19%** | **93.29%** | **88.94%** |
+| ResNet50                      |            |            |            |
 
 ### Original image size
 
-| RetinaFace Backbones          | Pretrained on ImageNet | Easy       | Medium     | Hard   |
-| ----------------------------- | ---------------------- | ---------- | ---------- | ------ |
-| MobileNetV1 (width mult=0.25) | True                   | 91.68%     | 89.69%     | 61.49% |
-| MobileNetV1 (width mult=0.50) | False                  | 92.22%     | 90.49%     | 62.93% |
-| MobileNetV1                   | False                  | 93.65%     | 92.00%     | 64.72% |
-| MobileNetV2                   | True                   | 95.23%     | 94.13%     | 67.75% |
-| ResNet18                      | True                   | 95.21%     | 93.90%     | 67.00% |
-| ResNet34                      | True                   | **95.81%** | **94.60%** | 67.66% |
-| ResNet50                      | True                   |            |            |        |
+| RetinaFace Backbones          | Easy       | Medium     | Hard   |
+| ----------------------------- | ---------- | ---------- | ------ |
+| MobileNetV1 (width mult=0.25) | 91.68%     | 89.69%     | 61.49% |
+| MobileNetV1 (width mult=0.50) | 92.22%     | 90.49%     | 62.93% |
+| MobileNetV1                   | 93.65%     | 92.00%     | 64.72% |
+| MobileNetV2                   | 95.23%     | 94.13%     | 67.75% |
+| ResNet18                      | 95.21%     | 93.90%     | 67.00% |
+| ResNet34                      | **95.81%** | **94.60%** | 67.66% |
+| ResNet50                      |            |            |        |
 
 
 ## ⚙️ Installation
