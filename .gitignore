@@ -9,8 +9,7 @@ weights/*.pt
 weights/*.ckpt
 *.onnx
 
-widerface_evaluation
-
+widerface_evaluation/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

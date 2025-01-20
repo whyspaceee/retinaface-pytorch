@@ -37,7 +37,7 @@ def parse_arguments():
     parser.add_argument(
         '--conf-threshold',
         type=float,
-        default=0.4,
+        default=0.02,
         help='Confidence threshold for filtering detections'
     )
     parser.add_argument(
@@ -164,7 +164,7 @@ def main(params):
         scores = conf.cpu().numpy()[:, 1]
 
         # filter by confidence threshold
-        inds = scores > params.conf_threshold
+        inds = scores > 1 - params.conf_threshold
         boxes = boxes[inds]
         landmarks = landmarks[inds]
         scores = scores[inds]

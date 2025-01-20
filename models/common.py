@@ -148,6 +148,71 @@ class SSH(nn.Module):
 
         out = torch.cat([conv3X3, conv5X5, conv7X7], dim=1)
         return F.relu(out, inplace=True)
+    
+class BasicConv(nn.Module):
+
+    def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, relu=True, bn=True):
+        super(BasicConv, self).__init__()
+        self.out_channels = out_planes
+        if bn:
+            self.conv = nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, groups=groups, bias=False)
+            self.bn = nn.BatchNorm2d(out_planes, eps=1e-5, momentum=0.01, affine=True)
+            self.relu = nn.ReLU(inplace=True) if relu else None
+        else:
+            self.conv = nn.Conv2d(in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, groups=groups, bias=True)
+            self.bn = None
+            self.relu = nn.ReLU(inplace=True) if relu else None
+
+    def forward(self, x):
+        x = self.conv(x)
+        if self.bn is not None:
+            x = self.bn(x)
+        if self.relu is not None:
+            x = self.relu(x)
+        return x
+
+
+class BasicRFB(nn.Module):
+
+    def __init__(self, in_planes, out_planes, stride=1, scale=0.1, map_reduce=8, vision=1, groups=1):
+        super(BasicRFB, self).__init__()
+        self.scale = scale
+        self.out_channels = out_planes
+        inter_planes = in_planes // map_reduce
+
+        self.branch0 = nn.Sequential(
+            BasicConv(in_planes, inter_planes, kernel_size=1, stride=1, groups=groups, relu=False),
+            BasicConv(inter_planes, 2 * inter_planes, kernel_size=(3, 3), stride=stride, padding=(1, 1), groups=groups),
+            BasicConv(2 * inter_planes, 2 * inter_planes, kernel_size=3, stride=1, padding=vision + 1, dilation=vision + 1, relu=False, groups=groups)
+        )
+        self.branch1 = nn.Sequential(
+            BasicConv(in_planes, inter_planes, kernel_size=1, stride=1, groups=groups, relu=False),
+            BasicConv(inter_planes, 2 * inter_planes, kernel_size=(3, 3), stride=stride, padding=(1, 1), groups=groups),
+            BasicConv(2 * inter_planes, 2 * inter_planes, kernel_size=3, stride=1, padding=vision + 2, dilation=vision + 2, relu=False, groups=groups)
+        )
+        self.branch2 = nn.Sequential(
+            BasicConv(in_planes, inter_planes, kernel_size=1, stride=1, groups=groups, relu=False),
+            BasicConv(inter_planes, (inter_planes // 2) * 3, kernel_size=3, stride=1, padding=1, groups=groups),
+            BasicConv((inter_planes // 2) * 3, 2 * inter_planes, kernel_size=3, stride=stride, padding=1, groups=groups),
+            BasicConv(2 * inter_planes, 2 * inter_planes, kernel_size=3, stride=1, padding=vision + 4, dilation=vision + 4, relu=False, groups=groups)
+        )
+
+        self.ConvLinear = BasicConv(6 * inter_planes, out_planes, kernel_size=1, stride=1, relu=False)
+        self.shortcut = BasicConv(in_planes, out_planes, kernel_size=1, stride=stride, relu=False)
+        self.relu = nn.ReLU(inplace=False)
+
+    def forward(self, x):
+        x0 = self.branch0(x)
+        x1 = self.branch1(x)
+        x2 = self.branch2(x)
+
+        out = torch.cat((x0, x1, x2), 1)
+        out = self.ConvLinear(out)
+        short = self.shortcut(x)
+        out = out * self.scale + short
+        out = self.relu(out)
+
+        return out
 
 
 class FPN(nn.Module):
@@ -156,7 +221,7 @@ class FPN(nn.Module):
     Uses 1x1 convolutions for output layers and 3x3 convolutions for merging layers.
     """
 
-    def __init__(self, in_channels_list: List[int], out_channels: int) -> None:
+    def __init__(self, in_channels_list: List[int], out_channels: int, useRFB = True) -> None:
         """
         Initializes the FPN module.
 
@@ -175,6 +240,17 @@ class FPN(nn.Module):
         self.merge1 = Conv2dNormActivation(out_channels, out_channels, kernel_size=3, negative_slope=leaky)
         self.merge2 = Conv2dNormActivation(out_channels, out_channels, kernel_size=3, negative_slope=leaky)
 
+        print("useRFB: ", useRFB)
+
+        if(useRFB):
+            self.useRFB = True
+            self.rfb1 = BasicRFB(in_channels_list[0], in_channels_list[0], stride=1, scale=1.0, map_reduce=8, vision=1, groups=1)
+            self.rfb2 = BasicRFB(in_channels_list[1], in_channels_list[1], stride=1, scale=1.0, map_reduce=8, vision=1, groups=1)
+            self.rfb3 = BasicRFB(in_channels_list[2], in_channels_list[2], stride=1, scale=1.0, map_reduce=8, vision=1, groups=1)
+        else: 
+            self.useRFB = False
+
+
     def forward(self, inputs) -> List[Tensor]:
         """
         Forward pass of the FPN module.
@@ -187,10 +263,19 @@ class FPN(nn.Module):
         """
         inputs = list(inputs.values())
 
+        if self.useRFB:
+            input1 = self.rfb1(inputs[0])
+            input2 = self.rfb2(inputs[1])
+            input3 = self.rfb3(inputs[2])
+        else:
+            input1 = inputs[0]
+            input2 = inputs[1]
+            input3 = inputs[2]
+
         # Apply output layers to each feature map
-        output1 = self.output1(inputs[0])
-        output2 = self.output2(inputs[1])
-        output3 = self.output3(inputs[2])
+        output1 = self.output1(input1)
+        output2 = self.output2(input2)
+        output3 = self.output3(input3)
 
         # Merge outputs with upsampling and addition
         upsample3 = F.interpolate(output3, size=output2.shape[2:], mode="nearest")

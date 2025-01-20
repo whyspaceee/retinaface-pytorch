@@ -121,6 +121,7 @@ def train_one_epoch(
 def main(params):
     random_seed()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    torch.cuda.empty_cache()
 
     # Create folder to save weights if not exists
     os.makedirs(params.save_dir, exist_ok=True)
