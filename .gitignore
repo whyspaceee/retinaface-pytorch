@@ -11,6 +11,9 @@ weights/*.pt
 weights/*.ckpt
 *.onnx
 
+widerface_evaluation/build/
+widerface_evaluation/widerface_txt/
+
 widerface_evaluation/
 
 # Byte-compiled / optimized / DLL files
