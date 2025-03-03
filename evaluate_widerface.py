@@ -167,7 +167,7 @@ def main(params):
         scores = conf.cpu().numpy()[:, 1]
 
         # filter by confidence threshold
-        inds = scores > 1 - params.conf_threshold
+        inds = scores > params.conf_threshold
         boxes = boxes[inds]
         landmarks = landmarks[inds]
         scores = scores[inds]

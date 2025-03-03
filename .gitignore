@@ -3,6 +3,8 @@ results/
 # data/
 data/FDDB
 data/widerface
+data/AFLW2000/
+data/HeadPoseImageDatabase/
 eval/
 weights/*.pth
 weights/*.pt

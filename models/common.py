@@ -221,7 +221,7 @@ class FPN(nn.Module):
     Uses 1x1 convolutions for output layers and 3x3 convolutions for merging layers.
     """
 
-    def __init__(self, in_channels_list: List[int], out_channels: int, useRFB = True) -> None:
+    def __init__(self, in_channels_list: List[int], out_channels: int, useRFB = False) -> None:
         """
         Initializes the FPN module.
 
