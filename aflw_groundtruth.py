@@ -197,8 +197,8 @@ def convert_aflw_to_wider_detection(annotations_dir, images_dir, output_root, ar
     total_tp = 0
     total_fp = 0
     total_fn = 0
-    iou_threshold = 0.5
-    scaled_size = 0
+    iou_threshold = 0.1
+    scaled_size = 32
 
     for mat_file in os.listdir(annotations_dir):
         if not mat_file.endswith('.mat'):
@@ -232,12 +232,9 @@ def convert_aflw_to_wider_detection(annotations_dir, images_dir, output_root, ar
             canvas[offset_y:offset_y+scaled_size, offset_x:offset_x+scaled_size] = resized_img
             img = canvas
 
-        cv2.imshow(img)
-
         # Run face detection using RetinaFace
         detections = detectRetinaface(args, model, device, img)
         # Print detections (for debugging)
-        print(f"Detections for {image_name}: {detections}")
 
         # --- Compute ground-truth bounding box from AFLW landmarks ---
         # The MAT file is assumed to contain 'pt2d' (2D facial landmarks)

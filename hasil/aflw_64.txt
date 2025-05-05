@@ -1,0 +1,10 @@
+Evaluation results:
+Total images processed: 2000
+True Positives: 1718
+False Positives: 24
+False Negatives: 282
+Precision: 0.9862
+Recall: 0.8590
+F1 Score: 0.9182
+Accuracy: 0.8488
+
